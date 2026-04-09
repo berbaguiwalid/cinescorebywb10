@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CinéScore Pro</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CinéScore">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,20 +28,22 @@
             background: var(--bg-p); color: var(--t-p); 
             font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 70px;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .must-tab-bar {
-            position: fixed; bottom: 0; width: 100%; height: 60px;
+            position: fixed; bottom: 0; width: 100%; height: 65px;
             background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px);
             display: flex; justify-content: space-around; align-items: center;
             border-top: 1px solid #222; z-index: 9999;
+            padding-bottom: env(safe-area-inset-bottom);
         }
         .tab-item { display: flex; flex-direction: column; align-items: center; opacity: 0.5; flex: 1; cursor: pointer; }
         .tab-item.active { opacity: 1; color: var(--imdb-yellow); }
         .tab-emoji { font-size: 18px; }
         .tab-label { font-size: 8px; font-weight: 700; text-transform: uppercase; margin-top: 2px; text-align: center; }
 
-        .header-ios { padding: 20px 15px 10px; }
+        .header-ios { padding: 40px 15px 10px; } /* Ajusté pour la barre iPhone */
         .header-ios h1 { font-size: 24px; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: -0.5px; }
         .section-title { font-family: 'Orbitron', sans-serif; font-size: 13px; color: var(--imdb-yellow); padding: 15px; text-transform: uppercase; }
 
@@ -48,7 +56,7 @@
         .no-poster { 
             background: var(--imdb-yellow); color: #000; width: 100%; height: 100%; 
             display: flex; align-items: center; justify-content: center; 
-            text-align: center; font-weight: 900; font-size: 10px; padding: 5px; box-sizing: border-box; text-transform: uppercase; word-wrap: break-word;
+            text-align: center; font-weight: 900; font-size: 10px; padding: 5px; box-sizing: break-word; text-transform: uppercase;
         }
 
         .grid-3col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px 15px; }
@@ -73,7 +81,7 @@
         .stat-lbl { font-size: 9px; color: var(--t-s); text-transform: uppercase; font-weight: 700; margin-top: 4px;}
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; overflow-y: auto; padding-bottom: 50px;}
-        .modal-content { padding: 20px; }
+        .modal-content { padding: 40px 20px 20px; }
         .close-btn { color: var(--imdb-yellow); font-weight: 900; margin-bottom: 20px; cursor: pointer; display: inline-block; text-transform: uppercase; font-size: 14px;}
         
         textarea { width: 100%; background: #111; color: white; border: 1px solid #333; border-radius: 8px; padding: 15px; box-sizing: border-box; min-height: 120px; font-family: 'Inter'; margin-top: 10px; }
@@ -86,7 +94,7 @@
         .brand-title {
             text-align: center; font-family: 'Orbitron', sans-serif; 
             color: #4caf50; font-size: 18px; font-weight: 900; 
-            letter-spacing: 1px; padding-top: 20px;
+            letter-spacing: 1px; padding-top: 40px;
         }
         .brand-title span { color: white; font-size: 12px; font-family: 'Inter', sans-serif; font-weight: 400;}
     </style>
@@ -124,7 +132,6 @@
     <script>
         const API_KEY = "f59231e7c7085af32a303eb181358453";
         const IMG_PATH = "https://image.tmdb.org/t/p/w500";
-        // TON URL FIREBASE
         const FIREBASE_URL = "https://cinescore-56854-default-rtdb.europe-west1.firebasedatabase.app/data.json";
 
         let db = {
@@ -132,20 +139,42 @@
             reviews: []
         };
 
-        // CHARGEMENT INITIAL DE FIREBASE
+        // CHARGEMENT INITIAL ET ÉCOUTE EN TEMPS RÉEL
         async function loadData() {
             try {
                 const res = await fetch(FIREBASE_URL);
                 const cloudData = await res.json();
-                if (cloudData) db = cloudData;
-                // Si on est sur l'onglet critique ou top, on rafraîchit
-                const currentTab = document.querySelector('.tab-item.active .tab-label').innerText;
-                if(currentTab.includes("TOPS")) renderMesTop();
-                if(currentTab.includes("CRITIQUES")) renderCritiques();
-            } catch (e) { console.error("Erreur Firebase Load", e); }
+                
+                if (cloudData) {
+                    db = cloudData;
+                    const activeTab = document.querySelector('.tab-item.active .tab-label');
+                    if (activeTab) {
+                        const label = activeTab.innerText;
+                        if(label.includes("TOPS")) renderMesTop();
+                        if(label.includes("CRITIQUES")) renderCritiques();
+                    }
+                }
+            } catch (e) { console.error("Erreur au chargement Firebase", e); }
+
+            if (!window.syncInterval) {
+                window.syncInterval = setInterval(async () => {
+                    try {
+                        const res = await fetch(FIREBASE_URL);
+                        const cloudData = await res.json();
+                        if (cloudData && JSON.stringify(db) !== JSON.stringify(cloudData)) {
+                            db = cloudData;
+                            const activeTab = document.querySelector('.tab-item.active .tab-label');
+                            if (activeTab) {
+                                const label = activeTab.innerText;
+                                if(label.includes("TOPS")) renderMesTop();
+                                if(label.includes("CRITIQUES")) renderCritiques();
+                            }
+                        }
+                    } catch (e) { }
+                }, 30000); 
+            }
         }
 
-        // SAUVEGARDE VERS FIREBASE
         async function syncFirebase() {
             try {
                 await fetch(FIREBASE_URL, {
@@ -171,7 +200,7 @@
             document.getElementById('view').innerHTML = `
                 <div class="header-ios"><h1>Nouvelles Sorties</h1></div>
                 <div class="section-title">Bandes-annonces du moment</div>
-                <div id="trailers-container"><div style="text-align:center; padding:20px; color:var(--imdb-yellow);">Recherche des bandes-annonces...</div></div>
+                <div id="trailers-container"><div style="text-align:center; padding:20px; color:var(--imdb-yellow);">Chargement...</div></div>
             `;
             try {
                 const res = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}&language=fr-FR`);
@@ -183,11 +212,6 @@
                     const vRes = await fetch(`https://api.themoviedb.org/3/movie/${m.id}/videos?api_key=${API_KEY}&language=fr-FR`);
                     const vData = await vRes.json();
                     let trailer = vData.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
-                    if (!trailer) {
-                        const vResEn = await fetch(`https://api.themoviedb.org/3/movie/${m.id}/videos?api_key=${API_KEY}`);
-                        const vDataEn = await vResEn.json();
-                        trailer = vDataEn.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
-                    }
                     if (trailer) {
                         trailersHTML += `
                             <div style="margin: 0 15px 15px; position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border: 1px solid #333; cursor:pointer;" onclick="playTrailer('${trailer.key}')">
@@ -200,8 +224,8 @@
                         `;
                     }
                 }
-                document.getElementById('trailers-container').innerHTML = trailersHTML || "<div style='padding:15px;'>Aucune bande-annonce trouvée.</div>";
-            } catch(e) { document.getElementById('trailers-container').innerHTML = "<div style='padding:15px;'>Erreur.</div>"; }
+                document.getElementById('trailers-container').innerHTML = trailersHTML || "<div style='padding:15px;'>Rien à afficher.</div>";
+            } catch(e) { }
         }
 
         function playTrailer(ytKey) {
@@ -215,32 +239,17 @@
             setActive(1);
             document.getElementById('view').innerHTML = `
                 <div class="header-ios"><h1>Recherche</h1></div>
-                <div class="search-bar">🔍 <input type="text" id="searchInput" placeholder="Taper un film, série ou acteur..." oninput="executeSearch(this.value)"></div>
+                <div class="search-bar">🔍 <input type="text" id="searchInput" placeholder="Film, série, acteur..." oninput="executeSearch(this.value)"></div>
                 <div id="search-results-area"></div>
             `;
-            loadPopularActors();
-        }
-
-        async function loadPopularActors() {
-            const area = document.getElementById('search-results-area');
-            area.innerHTML = `<div style="text-align:center; padding:20px; color:var(--imdb-yellow); font-family:'Orbitron';">Chargement...</div>`;
-            const mesActeurs = ["Denzel Washington", "Robert De Niro", "Tom Hanks", "Al Pacino", "Leonardo DiCaprio", "Bruce Willis", "Morgan Freeman", "Tom Cruise", "Brad Pitt", "Matt Damon", "Will Smith", "Arnold Schwarzenegger", "Sylvester Stallone", "Samuel L. Jackson", "Forest Whitaker", "Bradley Cooper", "Jason Statham", "Jackie Chan", "Liam Neeson", "Mark Wahlberg", "Bryan Cranston", "Kiefer Sutherland", "Clint Eastwood", "Eddie Murphy", "Jim Carrey"];
-            try {
-                const actorData = await Promise.all(mesActeurs.map(async (name) => {
-                    const res = await fetch(`https://api.themoviedb.org/3/search/person?api_key=${API_KEY}&query=${encodeURIComponent(name)}&language=fr-FR`);
-                    const d = await res.json(); return d.results[0];
-                }));
-                area.innerHTML = `<div class="section-title">Légendes du Cinéma</div><div class="grid-5col">${actorData.map(a => a ? `<div class="poster-card" onclick="renderActorProfile(${a.id})" style="width:100%;"><img src="${IMG_PATH + a.profile_path}"><div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.8); text-align:center; font-size:7px; padding:3px; font-weight:700;">${a.name}</div></div>` : '').join('')}</div>`;
-            } catch(e) { area.innerHTML = "Erreur."; }
         }
 
         let searchTimeout;
         async function executeSearch(query) {
             clearTimeout(searchTimeout);
-            if(query.length < 3) { loadPopularActors(); return; }
+            if(query.length < 3) return;
             searchTimeout = setTimeout(async () => {
                 const area = document.getElementById('search-results-area');
-                area.innerHTML = `<div style="text-align:center; padding:20px; color:var(--imdb-yellow);">Recherche...</div>`;
                 const encoded = encodeURIComponent(query);
                 const [m, s, a] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encoded}&language=fr-FR`).then(r => r.json()),
@@ -256,29 +265,10 @@
         }
 
         function generateCards(results, type) {
-            return results.slice(0, 10).map(item => `<div class="poster-card" onclick="${type === 'person' ? `renderActorProfile(${item.id})` : ''}">${item.poster_path || item.profile_path ? `<img src="${IMG_PATH + (item.poster_path || item.profile_path)}">` : `<div class="no-poster">${item.title || item.name}</div>`}</div>`).join('');
-        }
-
-        async function renderActorProfile(id) {
-            const modal = document.getElementById('fullModal');
-            const body = document.getElementById('modal-body');
-            modal.style.display = 'block';
-            const [p, c] = await Promise.all([
-                fetch(`https://api.themoviedb.org/3/person/${id}?api_key=${API_KEY}&language=fr-FR`).then(r => r.json()),
-                fetch(`https://api.themoviedb.org/3/person/${id}/combined_credits?api_key=${API_KEY}&language=fr-FR`).then(r => r.json())
-            ]);
-            const sortedCast = c.cast.sort((a, b) => new Date(b.release_date || b.first_air_date || '1900-01-01') - new Date(a.release_date || a.first_air_date || '1900-01-01'));
-            body.innerHTML = `
-                <div style="display:flex; gap:15px; margin-bottom:20px;">
-                    <div class="poster-card" style="flex:0 0 100px;">${p.profile_path ? `<img src="${IMG_PATH + p.profile_path}">` : ''}</div>
-                    <div><h1 style="margin:0; font-size:20px;">${p.name}</h1><p style="color:var(--imdb-yellow); font-weight:800;">${p.birthday ? new Date().getFullYear() - new Date(p.birthday).getFullYear() + ' ans' : ''}</p></div>
-                </div>
-                <div class="grid-5col" style="padding:0;">${sortedCast.slice(0, 20).map(m => `<div class="poster-card" style="width:100%;">${m.poster_path ? `<img src="${IMG_PATH + m.poster_path}">` : `<div class="no-poster">${m.title || m.name}</div>`}</div>`).join('')}</div>
-            `;
+            return results.slice(0, 10).map(item => `<div class="poster-card">${item.poster_path || item.profile_path ? `<img src="${IMG_PATH + (item.poster_path || item.profile_path)}">` : `<div class="no-poster">${item.title || item.name}</div>`}</div>`).join('');
         }
 
         async function renderMesTop() {
-            await loadData(); // Synchro avant d'afficher
             setActive(2);
             document.getElementById('view').innerHTML = `<div class="header-ios"><h1>Mes Tops 10</h1></div>${buildTopSection('Films', 'movies')}${buildTopSection('Séries', 'series')}${buildTopSection('Acteurs', 'actors')}`;
         }
@@ -303,8 +293,8 @@
             const modal = document.getElementById('fullModal');
             const body = document.getElementById('modal-body');
             modal.style.display = 'block';
-            let queryType = type === 'movies' ? 'movie' : (type === 'series' ? 'tv' : 'person');
-            body.innerHTML = `<h2 style="margin-top:0;">Ajouter au Top</h2><input type="text" class="rate-input" placeholder="Rechercher..." oninput="searchForTop(this.value, '${queryType}', '${type}')"><div id="top-search-results" class="grid-3col" style="padding:20px 0;"></div>`;
+            let qType = type === 'movies' ? 'movie' : (type === 'series' ? 'tv' : 'person');
+            body.innerHTML = `<h2 style="margin-top:0;">Ajouter au Top</h2><input type="text" class="rate-input" placeholder="Rechercher..." oninput="searchForTop(this.value, '${qType}', '${type}')"><div id="top-search-results" class="grid-3col" style="padding:20px 0;"></div>`;
         }
 
         async function searchForTop(query, apiType, dbType) {
@@ -322,7 +312,6 @@
         }
 
         async function renderCritiques() {
-            await loadData(); // Synchro avant d'afficher
             setActive(3);
             const reviews = db.reviews || [];
             document.getElementById('view').innerHTML = `
@@ -365,7 +354,6 @@
             await syncFirebase(); closeModal(); renderCritiques();
         }
 
-        // LANCEMENT
         loadData().then(() => renderSorties());
     </script>
 </body>

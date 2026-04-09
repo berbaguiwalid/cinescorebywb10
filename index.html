@@ -171,21 +171,26 @@
             `;
 
             try {
-                // Actualisation des tendances du jour via l'API
                 const res = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}&language=fr-FR`);
                 const data = await res.json();
                 
                 let trailersHTML = '';
-                // On cherche les vidéos pour les 10 premiers films tendances
                 for (let i = 0; i < 10; i++) {
                     let m = data.results[i];
                     if(!m) continue;
                     
-                    const vRes = await fetch(`https://api.themoviedb.org/3/movie/${m.id}/videos?api_key=${API_KEY}`);
+                    // ON CHERCHE EN FRANÇAIS
+                    const vRes = await fetch(`https://api.themoviedb.org/3/movie/${m.id}/videos?api_key=${API_KEY}&language=fr-FR`);
                     const vData = await vRes.json();
                     
-                    // On cherche spécifiquement un "Trailer" sur "YouTube"
-                    const trailer = vData.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+                    let trailer = vData.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+                    
+                    // SECURITÉ : Si pas de trailer FR, on cherche le trailer international
+                    if (!trailer) {
+                        const vResEn = await fetch(`https://api.themoviedb.org/3/movie/${m.id}/videos?api_key=${API_KEY}`);
+                        const vDataEn = await vResEn.json();
+                        trailer = vDataEn.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+                    }
                     
                     if (trailer) {
                         trailersHTML += `
@@ -205,7 +210,6 @@
             }
         }
 
-        // Lancer la vidéo YouTube
         function playTrailer(ytKey) {
             const modal = document.getElementById('fullModal');
             const body = document.getElementById('modal-body');
@@ -224,7 +228,6 @@
                 <div class="search-bar">🔍 <input type="text" id="searchInput" placeholder="Taper un film, série ou acteur..." oninput="executeSearch(this.value)"></div>
                 <div id="search-results-area"></div>
             `;
-            // Charge la page par défaut sans effacer la barre de recherche
             loadPopularActors();
         }
 
@@ -250,14 +253,11 @@
         let searchTimeout;
         async function executeSearch(query) {
             clearTimeout(searchTimeout);
-            
-            // Si on efface le texte, on remet les acteurs populaires sans recharger tout l'écran
             if(query.length < 3) {
                 loadPopularActors();
                 return; 
             }
 
-            // Léger délai pour ne pas spammer l'API à chaque lettre tapée
             searchTimeout = setTimeout(async () => {
                 const area = document.getElementById('search-results-area');
                 area.innerHTML = `<div style="text-align:center; padding:20px; color:var(--imdb-yellow); font-family:'Orbitron';">Recherche en cours...</div>`;
@@ -322,7 +322,6 @@
             const movies = sortedCast.filter(c => c.media_type === 'movie');
             const series = sortedCast.filter(c => c.media_type === 'tv');
 
-            // Affichage avec la grille de 5 colonnes pour la filmo
             body.innerHTML = `
                 <div style="display:flex; gap:15px; margin-bottom:20px;">
                     <div class="poster-card" style="flex:0 0 100px;">
@@ -441,21 +440,17 @@
 
         function renderCritiques() {
             setActive(3);
-            
             const nbFilms = db.reviews.filter(r => r.type === 'movie').length;
             const nbSeries = db.reviews.filter(r => r.type === 'tv').length;
 
             document.getElementById('view').innerHTML = `
                 <div class="brand-title">CINÉ SCORE <br><span>by @wb10officiel</span></div>
                 <div class="header-ios"><h1>Mes Critiques</h1></div>
-                
                 <button class="btn-big-add" onclick="openAddReviewModal()">+</button>
-
                 <div class="stats-ribbon">
                     <div class="stat-box"><span class="stat-val">${nbFilms}</span><span class="stat-lbl">Films notés</span></div>
                     <div class="stat-box"><span class="stat-val">${nbSeries}</span><span class="stat-lbl">Séries notées</span></div>
                 </div>
-
                 <div style="padding-top:10px;">
                     ${db.reviews.slice().reverse().map((r, index) => `
                         <div class="review-card">
@@ -484,7 +479,6 @@
             const modal = document.getElementById('fullModal');
             const body = document.getElementById('modal-body');
             modal.style.display = 'block';
-            
             body.innerHTML = `
                 <h2 style="margin-top:0;">Nouvelle Critique</h2>
                 <input type="text" class="rate-input" placeholder="Rechercher le film ou la série..." oninput="searchForReview(this.value)">
@@ -497,7 +491,6 @@
             const encoded = encodeURIComponent(query);
             const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encoded}&language=fr-FR`);
             const data = await res.json();
-            
             const filtered = data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
 
             document.getElementById('review-search-results').innerHTML = filtered.slice(0,6).map(item => `
@@ -513,10 +506,8 @@
                 <h2 style="margin-top:0; color:var(--imdb-yellow); text-transform:uppercase;">${name}</h2>
                 <label style="font-size:12px; font-weight:700; color:var(--t-s); text-transform:uppercase;">Note sur 10</label>
                 <input type="number" id="rev-note" class="rate-input" min="1" max="10" placeholder="Ex: 8">
-                
                 <label style="font-size:12px; font-weight:700; color:var(--t-s); text-transform:uppercase; margin-top:15px; display:block;">Critique</label>
                 <textarea id="rev-text" placeholder="Qu'avez-vous pensé de cette œuvre ?"></textarea>
-                
                 <button class="save-btn" onclick="saveReview('${type}', '${name}', '${imgPath}')">Valider ma critique</button>
             `;
         }
@@ -524,21 +515,16 @@
         function saveReview(type, name, imgPath) {
             const note = parseInt(document.getElementById('rev-note').value);
             const text = document.getElementById('rev-text').value;
-            
             if(!note || note < 1 || note > 10) return alert("Veuillez mettre une note entre 1 et 10.");
-
             db.reviews.push({
                 type, name, img: imgPath !== 'null' ? IMG_PATH + imgPath : null, note, text
             });
-            
             saveDB();
             closeModal();
             renderCritiques();
         }
 
-        // --- INIT ---
         renderSorties();
-
     </script>
 </body>
 </html>

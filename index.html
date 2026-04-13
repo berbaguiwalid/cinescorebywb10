@@ -54,10 +54,10 @@ body {
 .brand-title {
     text-align: center;
     font-family: 'Orbitron', sans-serif;
-    color: #4caf50;
+    color: #ff0000;
     font-size: clamp(16px, 6vw, 22px);
     font-weight: 900;
-    margin-top: 65px; /* Évite l'encoche de l'iPhone */
+    margin-top: 20px;
     letter-spacing: 3px;
     text-transform: uppercase;
     width: 100%;
@@ -95,7 +95,7 @@ body {
 
         .header-ios { padding: 20px 15px 10px; }
         .header-ios h1 { font-size: 24px; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: -0.5px; }
-        .section-title { font-family: 'Orbitron', sans-serif; font-size: 13px; color: var(--imdb-yellow); padding: 15px; text-transform: uppercase; }
+        .section-title { font-family: 'Orbitron', sans-serif; font-size: 13px; color: var(--imdb-yellow); padding: 15px; text-transform: uppercase; text-align: center; }
 
         .h-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 0 15px 15px; scroll-snap-type: x mandatory; }
         .h-scroll::-webkit-scrollbar { display: none; }
@@ -134,13 +134,16 @@ body {
         .stat-val { display: block; font-size: 24px; font-family: 'Orbitron'; font-weight: 900; color: var(--imdb-yellow); }
         .stat-lbl { font-size: 9px; color: var(--t-s); text-transform: uppercase; font-weight: 700; margin-top: 4px;}
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 10000; overflow-y: auto; padding-bottom: 50px; touch-action: none;}
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 10000; overflow-y: scroll; padding-bottom: 50px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
         .modal-content { padding: 20px; padding-bottom: 100px; }
         .close-btn { display: none; }
         .actor-profile-header { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px; padding: 20px; }
         .actor-profile-photo { width: 180px; height: 270px; border-radius: 8px; object-fit: cover; }
         .actor-profile-name { font-family: 'Orbitron'; color: var(--imdb-yellow); font-size: 26px; font-weight: 900; text-align: center; margin: 0; }
         .actor-profile-info { font-size: 14px; color: #ccc; text-align: center; margin-top: 10px; line-height: 1.6; }
+        .actor-back-btn { display: inline-block; padding: 10px 15px; background: rgba(245, 197, 24, 0.2); color: var(--imdb-yellow); border: 1px solid var(--imdb-yellow); border-radius: 6px; font-weight: 700; cursor: pointer; margin: 15px; transition: all 0.3s ease; }
+        .actor-back-btn:active { transform: scale(0.95); background: rgba(245, 197, 24, 0.4); }
+        .actor-profile-container { padding-bottom: 20px; }
         .filmography-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px; }
         
         textarea { width: 100%; background: #111; color: white; border: 1px solid #333; border-radius: 8px; padding: 15px; box-sizing: border-box; min-height: 120px; font-family: 'Inter'; margin-top: 10px; }
@@ -193,17 +196,19 @@ body {
 
         /* --- NOUVELLE FICHE FILM XXL --- */
         .movie-details-container { margin: 0 -20px; }
-        .hero-poster-small { width: 100%; height: 40vh; display: block; border-radius: 12px; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .hero-poster-small { width: 50%; height: auto; aspect-ratio: 2/3; display: block; margin: 20px auto; border-radius: 12px; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         .movie-info-bar { padding: 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
-        .movie-info-main h2 { font-size: 28px; margin: 0; font-weight: 900; color: white; }
-        .movie-metadata { font-size: 14px; color: var(--t-s); margin-top: 8px; line-height: 1.6; }
+        .movie-info-main h2 { font-size: 20px; margin: 0; font-weight: 900; color: white; }
+        .movie-metadata { font-size: 16px; color: var(--t-s); margin-top: 8px; line-height: 1.6; font-weight: 600; }
         .score-badge-xxl { padding: 18px 24px; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; border: 3px solid; white-space: nowrap; font-size: 40px; }
         .score-green { color: white; background: #4caf50; border-color: #66bb6a; }
         .score-blue { color: white; background: #2196F3; border-color: #42a5f5; }
         .score-orange { color: white; background: #ff9800; border-color: #ffb74d; }
         .score-red { color: white; background: #f44336; border-color: #ef5350; }
         .score-light-yellow { color: #000; background: #fdd835; border-color: #fdd835; }
-        .rating-container { background: #1a1a1a; padding: 20px; border-radius: 12px; margin: 20px; }
+        .rating-container { background: transparent; padding: 20px; border-radius: 0; margin: 0 20px; }
+        .rating-simple { display: flex; flex-direction: column; gap: 12px; }
+        .rating-advanced { display: flex; flex-direction: column; gap: 15px; }
         .star-rating { font-size: 40px; letter-spacing: 10px; cursor: pointer; display: flex; justify-content: center; gap: 5px; }
         .star { cursor: pointer; color: #444; transition: 0.2s; }
         .star.active { color: var(--imdb-yellow); }
@@ -212,7 +217,7 @@ body {
         .star.rating-6to6point9 { color: #2196F3; }
         .star.rating-7to10 { color: #4caf50; }
         .rating-text { text-align: center; font-size: 16px; font-weight: 600; color: #ccc; margin-top: 15px; }
-        .save-rating-btn { background: #4caf50; color: black; padding: 10px 18px; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 13px; transition: 0.3s; }\n        .save-rating-btn.color-green { background: #4caf50; }\n        .save-rating-btn.color-blue { background: #2196F3; }\n        .save-rating-btn.color-orange { background: #ff9800; }\n        .save-rating-btn.color-red { background: #f44336; }
+        .save-rating-btn { background: #4caf50; color: black; padding: 16px 24px; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 15px; transition: 0.3s; }\n        .save-rating-btn.color-green { background: #4caf50; }\n        .save-rating-btn.color-blue { background: #2196F3; }\n        .save-rating-btn.color-orange { background: #ff9800; }\n        .save-rating-btn.color-red { background: #f44336; }
         .cast-rect-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 12px 20px; }
         .cast-rect-scroll::-webkit-scrollbar { display: none; }
         .actor-rect-card { flex: 0 0 130px; height: auto; border-radius: 12px; overflow: visible; position: relative; border: none; }
@@ -227,22 +232,22 @@ body {
         .trailer-section { padding: 20px; }
         .trailer-container { position: relative; width: 100%; background: #000; border-radius: 12px; overflow: hidden; }
         .trailer-video { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
-        .trailer-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 255, 255, 0.2); border: 2px solid white; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; z-index: 10; }
+        .trailer-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 255, 255, 0.2); border: 2px solid white; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; z-index: 10; }
         .trailer-play-btn:hover { background: rgba(255, 255, 255, 0.4); }
-        .trailer-play-icon { width: 0; height: 0; border-left: 30px solid white; border-top: 20px solid transparent; border-bottom: 20px solid transparent; margin-left: 8px; }
+        .trailer-play-icon { width: 0; height: 0; border-left: 15px solid white; border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 4px; }
         
         /* --- Bouton Play Moderne --- */
-        .modern-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .modern-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .modern-play-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2); transition: all 0.3s ease; z-index: -1; }
         .modern-play-btn:hover::before { background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.15) 100%); border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-        .modern-play-icon { width: 0; height: 0; border-left: 28px solid white; border-top: 20px solid transparent; border-bottom: 20px solid transparent; margin-left: 6px; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4)); transition: all 0.3s ease; }
+        .modern-play-icon { width: 0; height: 0; border-left: 20px solid white; border-top: 15px solid transparent; border-bottom: 15px solid transparent; margin-left: 4px; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4)); transition: all 0.3s ease; }
         .modern-play-btn:hover .modern-play-icon { transform: scale(1.1); filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5)); }
         
         /* --- Bouton À Voir --- */
-        .favorite-btn { background: #333; border: none; color: white; padding: 10px 18px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: 0.3s; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-top: 10px; flex: 1; justify-content: center; }
-        .favorite-btn:hover { background: #444; }
-        .favorite-btn.active { background: #ff9800; color: white; }
-        .favorite-btn.active:hover { background: #f57c00; }
+        .favorite-btn { background: #444; border: none; color: white; padding: 16px 24px; border-radius: 8px; font-size: 15px; cursor: pointer; transition: 0.3s; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-top: 10px; flex: 1; justify-content: center; }
+        .favorite-btn:hover { background: #555; }
+        .favorite-btn.active { background: #444; color: white; }
+        .favorite-btn.active:hover { background: #555; }
         
         /* --- Rating Buttons Container --- */
         .rating-buttons { display: flex; gap: 12px; margin-top: 15px; flex-direction: row-reverse; }
@@ -332,14 +337,105 @@ body {
             background: rgba(255, 255, 255, 0.3); 
             transform: scale(0.95);
         }
+
+        /* --- Google Login Page --- */
+        #login-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 350px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--imdb-yellow);
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: #a2a2a2;
+            margin-bottom: 30px;
+        }
+
+        .google-signin-btn {
+            width: 100%;
+            height: 50px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .google-signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .google-signin-btn:active {
+            transform: translateY(0);
+        }
+
+        .google-signin-btn img {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
 
+    <!-- Google Login Page -->
+    <div id="login-page" style="display: none;">
+        <div class="login-container">
+            <div class="login-title">CINESCORE</div>
+            <div class="login-subtitle">Évaluez vos films préférés</div>
+            <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID" data-callback="handleCredentialResponse"></div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="dark" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left" data-width="300"></div>
+            <div style="margin-top: 20px;">
+                <div style="font-size: 12px; color: #999; margin-bottom: 15px;">Ou connectez-vous avec un email</div>
+                <button class="google-signin-btn" onclick="alert('Fonctionnalité à venir - Utilisez Google Sign-In pour le moment')">
+                    📧 Continuer avec Email
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="settings-btn" onclick="openSettings()" title="Paramètres">⚙️</div>
     <div class="user-profile-crown">
         <div style="text-align: right;">
-            <div style="font-size: 12px; font-weight: 700; color: var(--imdb-yellow);">@Florian_Gervais</div>
+            <div style="font-size: 12px; font-weight: 700; color: var(--imdb-yellow);">@wb10officiel</div>
             <div style="font-size: 10px; color: #666; margin-top: -2px;">Cinéphile</div>
         </div>
         <img class="user-profile-avatar" id="userAvatar" src="https://via.placeholder.com/45x45?text=FG" alt="Avatar">
@@ -361,10 +457,10 @@ body {
 
     <nav class="must-tab-bar">
         <div class="tab-item active" onclick="renderSorties()">
-            <span class="tab-emoji">🏠</span>
+            <span class="tab-emoji">👀</span>
             <span class="tab-label">Accueil</span>
         </div>
-        <div class="tab-item" onclick="renderSearch()">
+        <div class="tab-item" onclick="renderSearch()" ondblclick="focusSearchBar()">
             <span class="tab-emoji">🔍</span>
             <span class="tab-label">Recherche</span>
         </div>
@@ -375,10 +471,6 @@ body {
         <div class="tab-item" onclick="renderActivite()">
             <span class="tab-emoji">✍️</span>
             <span class="tab-label">Activite</span>
-        </div>
-        <div class="tab-item" onclick="renderProfil()">
-            <span class="tab-emoji">👤</span>
-            <span class="tab-label">Profil</span>
         </div>
     </nav>
 
@@ -393,9 +485,10 @@ body {
             reviews: [],
             favorites: [],
             user: {
-                username: '@Florian_Gervais',
-                displayName: 'Florian Gervais',
+                username: '@wb10officiel',
+                displayName: 'wb10officiel',
                 avatar: null,
+                email: null,
                 bio: '',
                 age: null,
                 gender: null,
@@ -451,9 +544,8 @@ body {
                 
                 const data = await response.json();
                 
-                // Validation basique de la réponse
-                if (data.results === null || data.results === undefined) {
-                    console.warn('Réponse API invalide:', url);
+                if (!data) {
+                    throw new Error('Réponse vide du serveur');
                 }
                 
                 return data;
@@ -486,25 +578,29 @@ body {
         async function loadData() {
             try {
                 const cloudData = await fetchWithTimeout(FIREBASE_URL);
-                validateData(cloudData);
                 
-                if (cloudData) {
+                if (cloudData && typeof cloudData === 'object') {
                     db = cloudData;
+                    if (!db.user) db.user = { username: '@wb10officiel', displayName: 'wb10officiel', avatar: null, email: null, bio: '', age: null, gender: null, country: null, website: null, instagram: null, snapchat: null, password: null };
                     if (!db.reviews) db.reviews = [];
                     if (!db.tops) db.tops = { movies: [], series: [], actors: [] };
+                    if (!db.favorites) db.favorites = [];
                     
                     const activeTab = document.querySelector('.tab-item.active .tab-label');
                     if (activeTab) {
                         const label = activeTab.innerText;
                         if(label.includes("TOPS")) renderMesTop();
-                        if(label.includes("CRITIQUES")) renderCritiques();
+                        if(label.includes("ACTIVITE")) renderActivite();
                     }
                 }
             } catch (e) {
                 console.error("Erreur Firebase:", e);
                 showError("Impossible de charger vos données");
                 // Initialiser avec données locales vides si Firebase échoue
-                db = { tops: { movies: [], series: [], actors: [] }, reviews: [] };
+                if (!db.user) db.user = { username: '@wb10officiel', displayName: 'wb10officiel', avatar: null, email: null, bio: '', age: null, gender: null, country: null, website: null, instagram: null, snapchat: null, password: null };
+                if (!db.reviews) db.reviews = [];
+                if (!db.tops) db.tops = { movies: [], series: [], actors: [] };
+                if (!db.favorites) db.favorites = [];
             }
 
             if (!window.syncInterval) {
@@ -667,6 +763,7 @@ body {
             setActive(0);
             document.querySelector('.edit-link').style.display = 'none';
             document.getElementById('view').innerHTML = `
+                <div class="brand-title">CINÉ SCORE<br><span>Conçu par Walid Berbagui</span></div>
                 <div class="header-ios"><h1>Nouvelles Sorties</h1></div>
                 <div class="section-title">Bandes-annonces du moment</div>
                 <div id="trailers-container">Chargement...</div>
@@ -773,14 +870,32 @@ body {
             setActive(1);
             document.querySelector('.edit-link').style.display = 'none';
             document.getElementById('view').innerHTML = `
+                <div class="brand-title">CINÉ SCORE<br><span>Conçu par Walid Berbagui</span></div>
                 <div class="header-ios"><h1>Recherche</h1></div>
-                <div class="search-bar" style="display: flex; align-items: center; gap: 10px;">
+                <div class="search-bar" style="display: flex; align-items: center; gap: 10px; padding: 0 15px; margin-bottom: 15px;">
                     <span style="color: var(--imdb-yellow); font-size: 18px;">🔍</span>
-                    <input type="text" id="searchInput" placeholder="Rechercher un film, une série ou un acteur" oninput="executeSearch(this.value)" style="flex: 1;">
+                    <input type="text" id="searchInput" placeholder="Film, série ou acteur" oninput="executeSearch(this.value)" ondblclick="event.stopPropagation()" style="flex: 1; padding: 12px; background: #222; border: 1px solid #333; border-radius: 8px; color: white; font-size: 14px;">
                 </div>
                 <div id="search-results-area"></div>
             `;
             loadPopularActors();
+            
+            // Double-clic sur l'onglet Recherche pour focus la barre
+            document.addEventListener('tabSearchDoubleClick', function doubleClickHandler() {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            });
+        }
+
+        function focusSearchBar() {
+            setTimeout(() => {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }, 100);
         }
 
         function getSortedGenres() {
@@ -825,13 +940,13 @@ body {
                 }));
                 
                 area.innerHTML = `
-                    <div class="section-title">Genres</div>
-                    <div class="genre-btn-container">
-                        ${listGenres.map(g => `<button class="genre-btn" onclick="openGenreResults(${g.id}, '${g.name}')">${g.emoji} ${g.name}</button>`).join('')}
-                    </div>
                     <div class="section-title">Acteurs populaires</div>
                     <div class="grid-3col" style="grid-template-columns: repeat(4, 1fr);">
                         ${results.filter(a => a).map(a => `<div class="poster-card" onclick="renderActorProfile(${a.id})"><img src="${a.profile_path ? IMG_PATH + a.profile_path : 'placeholder.jpg'}"><div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.8); text-align:center; font-size:7px; padding:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${a.name || 'Inconnu'}</div></div>`).join('')}
+                    </div>
+                    <div class="section-title" style="margin-top: 30px;">Genres</div>
+                    <div class="genre-btn-container">
+                        ${listGenres.map(g => `<button class="genre-btn" onclick="openGenreResults(${g.id}, '${g.name}')">${g.emoji} ${g.name}</button>`).join('')}
                     </div>
                 `;
             } catch (e) {
@@ -908,22 +1023,22 @@ body {
 
         function getColorClass(rating) {
             if (rating >= 7) return 'score-green';
-            if (rating >= 6) return 'score-blue';
-            if (rating >= 5) return 'score-orange';
+            if (rating >= 6 && rating < 7) return 'score-light-yellow';
+            if (rating >= 5 && rating < 6) return 'score-orange';
             return 'score-red';
         }
         
         function getRatingColor(rating) {
             if (rating >= 7) return '#4caf50';
-            if (rating >= 6) return '#2196F3';
-            if (rating >= 5) return '#ff9800';
+            if (rating >= 6 && rating < 7) return '#fdd835';
+            if (rating >= 5 && rating < 6) return '#ff9800';
             return '#f44336';
         }
         
         function getRatingColorClass(rating) {
             if (rating >= 7) return 'color-green';
-            if (rating >= 6) return 'color-blue';
-            if (rating >= 5) return 'color-orange';
+            if (rating >= 6 && rating < 7) return 'color-light-yellow';
+            if (rating >= 5 && rating < 6) return 'color-orange';
             return 'color-red';
         }
         
@@ -969,18 +1084,17 @@ body {
                 const trailer = v.results?.find(vid => vid.type === 'Trailer' && vid.site === 'YouTube') || v.results?.[0];
 
                 let html = `<div class="movie-details-container">`;
+                html += `<div style="position: absolute; top: 10px; left: 10px; z-index: 100;"><button onclick="closeModal()" style="background: rgba(0,0,0,0.7); border: none; color: var(--imdb-yellow); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;">‹ Retour</button></div>`;
                 html += `<img src="${m.poster_path ? IMG_PATH + m.poster_path : ''}" class="hero-poster-small" alt="${m.title}">`;
 
-                html += `<div class="movie-info-bar"><div class="movie-info-main"><h2>${m.title || 'Film sans titre'}</h2><div class="movie-metadata">${metadata}</div></div><div class="score-badge-xxl ${colorClass}">${m.vote_average ? Math.round(m.vote_average) : '?'}</div></div>`;
+                html += `<div class="movie-info-bar"><div class="movie-info-main"><h2>${m.title || 'Film sans titre'}</h2><div class="movie-metadata">${metadata}</div></div><div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div class="score-badge-xxl ${colorClass}">${m.vote_average ? Math.round(m.vote_average) : '?'}</div>${userReview ? `<div style="padding: 8px 16px; border-radius: 8px; background: ${getRatingColor(userReview.note)}; color: ${userReview.note >= 6 ? '#000' : 'white'}; font-weight: 900; font-size: 14px; font-family: Orbitron;">MA NOTE: ${userReview.note}</div>` : ''}</div></div>`;
 
-                html += `<div class="rating-container"><div class="star-rating" id="userRating" onmouseleave="resetStarColors()">`;
+                html += `<div class="rating-container" id="ratingContainer"><div class="rating-simple" id="ratingSimple"><button class="favorite-btn ${(isFav = isFavorite('movie', id)) ? 'active' : ''}" onclick="toggleFavorite('movie', ${id}, '${(m.title || '').replace(/'/g, "\"")}', '${m.poster_path || ''}')">👍 À VOIR</button><button class="save-rating-btn" id="noteBtn" onclick="showRatingUI()">NOTER CE FILM</button></div><div class="rating-advanced" id="ratingAdvanced" style="display:none;"><div class="star-rating" id="userRating" onmouseleave="resetStarColors()">`;
                 for (let i = 1; i <= 10; i++) {
                     const isActive = userReview && userReview.note >= i ? 'active' : '';
                     html += `<span class="star ${isActive}" onclick="selectRating(${i})" onmouseover="previewStarColors(${i})">★</span>`;
                 }
-                const isFav = isFavorite('movie', id);
-                const ratingButtonColor = userReview ? getRatingColorClass(userReview.note) : '';
-                html += `</div><div class="rating-text" id="ratingText">${userReview ? getRatingText(userReview.note) : 'Cliquez pour noter...'}</div><div class="rating-buttons"><button class="save-rating-btn ${ratingButtonColor}" id="noteBtn" onclick="saveMovieRating('${m.title}', '${m.poster_path || ''}', 'movie')">NOTER</button><button class="favorite-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('movie', ${id}, '${(m.title || '').replace(/'/g, "\"")}', '${m.poster_path || ''}')">🌟 À VOIR</button></div></div>`;
+                html += `</div><div class="rating-text" id="ratingText">${userReview ? getRatingText(userReview.note) : 'Cliquez pour noter...'}</div><div style="display:flex; gap:10px; margin-top:15px;"><button class="save-rating-btn ${userReview ? getRatingColorClass(userReview.note) : ''}" id="noteConfirmBtn" onclick="saveMovieRating('${m.title}', '${m.poster_path || ''}', 'movie')">Confirmer la note</button><button class="cancel-btn" onclick="hideRatingUI()" style="flex:1; padding:10px; background:#333; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700;">Annuler</button></div></div></div>`;
                 window.currentRating = userReview ? userReview.note : null;
 
                 if (c.cast && c.cast.length > 0) {
@@ -995,22 +1109,22 @@ body {
 
                 html += `<div class="synopsis-section"><strong>Synopsis</strong><p style="margin-top:15px;">${m.overview || "Aucun synopsis disponible."}</p></div>`;
 
-                // Section critique éditorial pour les FILMS
-                if (userReview) {
-                    html += `<div class="review-editorial-card"><div class="review-editorial-title">⭐ Notre critique</div><p class="review-editorial-text">"${userReview.text}"</p><div class="review-editorial-footer"><span></span><div style="display:flex; gap:10px;"><div class="review-badge-editorial">${userReview.note}</div><button onclick="editMovieCritique('${m.title}', ${m.id}, 'movie')" style="background:#f5c518; color:black; border:none; padding:8px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">Modifier</button></div></div></div>`;
-                } else {
-                    html += `<div style="background: white; margin: 25px; border-radius: 12px; padding: 30px; color: black;"><div style="font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-weight: 700;">Écrivez votre critique</div><textarea id="reviewText" placeholder="Partagez votre avis..." style="width:100%; background:#f5f5f5; color:#000; border:1px solid #ddd; border-radius:8px; padding:15px; box-sizing:border-box; min-height:100px; font-size:14px;"></textarea><button onclick="saveMovieCritique('${m.title}', ${m.id}, 'movie')" style="background:#f5c518; color:black; border:none; padding:12px 24px; border-radius:8px; font-weight:900; cursor:pointer; margin-top:12px; width:100%; text-transform:uppercase;">Publier</button></div>`;
-                }
-
                 if (trailer) {
                     html += `<div class="trailer-section"><strong style="color:white; display:block; margin-bottom:15px;">Bande-annonce</strong><div class="trailer-container" id="trailerContainer"><img src="https://img.youtube.com/vi/${trailer.key}/maxresdefault.jpg" style="width:100%; height:auto; aspect-ratio:16/9; object-fit:cover;"><div class="trailer-play-btn" onclick="playTrailerModal('${trailer.key}', this.parentElement)"><div class="trailer-play-icon"></div></div></div></div>`;
+                }
+
+                // Section critique éditorial pour les FILMS en bas de page
+                if (userReview) {
+                    html += `<div class="review-editorial-card" style="margin: 30px 15px; border: 1px solid #f5c518; border-left: 4px solid #f5c518; box-shadow: 0 2px 10px rgba(245,197,24,0.15);"><div class="review-editorial-title">NOTRE CRITIQUE</div><p class="review-editorial-text" style="font-family: Graphik, 'Poppins', sans-serif; font-size: 16px; line-height: 2; margin: 20px 0;">${userReview.text}</p><div class="review-editorial-footer"><div style="display: flex; gap: 10px; width: 100%;"><button onclick="deleteMovieCritique('${m.title}'); closeModal();" style="background:#f44336; color:white; border:none; padding:8px 16px; border-radius:4px; font-weight:700; cursor:pointer; font-size:12px; flex:1;">🗑️ SUPPRIMER</button><button onclick="editMovieCritique('${m.title}', ${m.id}, 'movie')" style="background:#f5c518; color:black; border:none; padding:8px 16px; border-radius:4px; font-weight:700; cursor:pointer; font-size:12px; flex:1;">✏️ Modifier</button></div></div></div>`;
+                } else {
+                    html += `<div style="background: white; margin: 30px 15px; border-radius: 8px; padding: 30px; color: black; border-left: 4px solid #f5c518; box-shadow: 0 2px 10px rgba(245,197,24,0.15);"><div style="font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-weight: 700;">Écrivez votre critique</div><textarea id="reviewText" placeholder="Partagez votre avis sur le film..." style="width:100%; background:#f9f9f9; color:#000; border:1px solid #ddd; border-radius:6px; padding:15px; box-sizing:border-box; min-height:120px; font-size:14px; font-family: Graphik, 'Poppins', sans-serif; font-weight: 600; line-height: 1.8;"></textarea><button onclick="saveMovieCritique('${m.title}', ${m.id}, 'movie')" style="background:#f5c518; color:black; border:none; padding:12px 24px; border-radius:6px; font-weight:900; cursor:pointer; margin-top:15px; width:100%; text-transform:uppercase; font-size: 13px;">Publier la critique</button></div>`;
                 }
 
                 html += `</div>`;
                 body.innerHTML = html;
             } catch (e) {
                 console.error('Erreur renderMovieDetails:', e);
-                body.innerHTML = "<p style='text-align:center; color:#f44336;'>Erreur: " + e.message + "</p>";
+                body.innerHTML = "<p style='text-align:center; color:#f44336; padding: 20px;'>Erreur: " + e.message + "<br><br><button onclick='renderActivite(); closeModal();' style='background:#f5c518; color:black; padding:10px 20px; border:none; border-radius:6px; font-weight:700; cursor:pointer;'>Retour à Activité</button></p>";
                 showError('Impossible de charger les détails du film');
             }
         }
@@ -1037,12 +1151,26 @@ body {
             });
             document.getElementById('ratingText').textContent = getRatingText(rating);
             // Changer la couleur du bouton NOTER
-            const noteBtn = document.getElementById('noteBtn');
+            const noteBtn = document.getElementById('noteConfirmBtn');
             if (noteBtn) {
                 noteBtn.classList.remove('color-green', 'color-blue', 'color-orange', 'color-red');
                 noteBtn.classList.add(getRatingColorClass(rating));
             }
             window.currentRating = rating;
+        }
+
+        function showRatingUI() {
+            const ratingSimple = document.getElementById('ratingSimple');
+            const ratingAdvanced = document.getElementById('ratingAdvanced');
+            if (ratingSimple) ratingSimple.style.display = 'none';
+            if (ratingAdvanced) ratingAdvanced.style.display = 'block';
+        }
+
+        function hideRatingUI() {
+            const ratingSimple = document.getElementById('ratingSimple');
+            const ratingAdvanced = document.getElementById('ratingAdvanced');
+            if (ratingSimple) ratingSimple.style.display = 'block';
+            if (ratingAdvanced) ratingAdvanced.style.display = 'none';
         }
         
         function previewStarColors(previewRating) {
@@ -1161,8 +1289,18 @@ body {
             }
         }
         
+        async function deleteMovieCritique(name) {
+            const reviewIndex = db.reviews.findIndex(r => r.name === name);
+            if (reviewIndex >= 0) {
+                db.reviews[reviewIndex].text = 'À noter...';
+                db.reviews[reviewIndex].timestamp = new Date().toISOString();
+                await syncFirebase();
+                showSuccess('Critique supprimée!');
+            }
+        }
+        
         function playTrailerModal(ytKey, container) {
-            container.innerHTML = `<iframe width="100%" style="aspect-ratio:16/9;" src="https://www.youtube.com/embed/${ytKey}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            container.innerHTML = `<iframe width="100%" style="aspect-ratio:16/9;" src="https://www.youtube.com/embed/${ytKey}?autoplay=1&fs=1&controls=1&modestbranding=1" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
         }
         
         function toggleFavorite(type, id, name, img) {
@@ -1218,18 +1356,17 @@ body {
                 const trailer = v.results?.find(vid => vid.type === 'Trailer' && vid.site === 'YouTube') || v.results?.[0];
 
                 let html = `<div class="movie-details-container">`;
+                html += `<div style="position: absolute; top: 10px; left: 10px; z-index: 100;"><button onclick="closeModal()" style="background: rgba(0,0,0,0.7); border: none; color: var(--imdb-yellow); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;">‹ Retour</button></div>`;
                 html += `<img src="${m.poster_path ? IMG_PATH + m.poster_path : ''}" class="hero-poster-small" alt="${m.name}">`;
 
-                html += `<div class="movie-info-bar"><div class="movie-info-main"><h2>${m.name || 'Série sans titre'}</h2><div class="movie-metadata">${metadata}</div></div><div class="score-badge-xxl ${colorClass}">${m.vote_average ? Math.round(m.vote_average) : '?'}</div></div>`;
+                html += `<div class="movie-info-bar"><div class="movie-info-main"><h2>${m.name || 'Série sans titre'}</h2><div class="movie-metadata">${metadata}</div></div><div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div class="score-badge-xxl ${colorClass}">${m.vote_average ? Math.round(m.vote_average) : '?'}</div>${userReview ? `<div style="padding: 8px 16px; border-radius: 8px; background: ${getRatingColor(userReview.note)}; color: ${userReview.note >= 6 ? '#000' : 'white'}; font-weight: 900; font-size: 14px; font-family: Orbitron;">MA NOTE: ${userReview.note}</div>` : ''}</div></div>`;
 
-                html += `<div class="rating-container"><div class="star-rating" id="userRating" onmouseleave="resetStarColors()">`;
+                html += `<div class="rating-container" id="ratingContainer"><div class="rating-simple" id="ratingSimple"><button class="favorite-btn ${(isFav = isFavorite('tv', id)) ? 'active' : ''}" onclick="toggleFavorite('tv', ${id}, '${(m.name || '').replace(/'/g, "\"")}', '${m.poster_path || ''}')">👍 À VOIR</button><button class="save-rating-btn" id="noteBtn" onclick="showRatingUI()">NOTER CETTE SÉRIE</button></div><div class="rating-advanced" id="ratingAdvanced" style="display:none;"><div class="star-rating" id="userRating" onmouseleave="resetStarColors()">`;
                 for (let i = 1; i <= 10; i++) {
                     const isActive = userReview && userReview.note >= i ? 'active' : '';
                     html += `<span class="star ${isActive}" onclick="selectRating(${i})" onmouseover="previewStarColors(${i})">★</span>`;
                 }
-                const isFav = isFavorite('tv', id);
-                const ratingButtonColor = userReview ? getRatingColorClass(userReview.note) : '';
-                html += `</div><div class="rating-text" id="ratingText">${userReview ? getRatingText(userReview.note) : 'Cliquez pour noter...'}</div><div class="rating-buttons"><button class="save-rating-btn ${ratingButtonColor}" id="noteBtn" onclick="saveMovieRating('${m.name}', '${m.poster_path || ''}', 'tv')">NOTER</button><button class="favorite-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('tv', ${id}, '${(m.name || '').replace(/'/g, "\"")}', '${m.poster_path || ''}')">🌟 À VOIR</button></div></div>`;
+                html += `</div><div class="rating-text" id="ratingText">${userReview ? getRatingText(userReview.note) : 'Cliquez pour noter...'}</div><div style="display:flex; gap:10px; margin-top:15px;"><button class="save-rating-btn ${userReview ? getRatingColorClass(userReview.note) : ''}" id="noteConfirmBtn" onclick="saveMovieRating('${m.name}', '${m.poster_path || ''}', 'tv')">Confirmer la note</button><button class="cancel-btn" onclick="hideRatingUI()" style="flex:1; padding:10px; background:#333; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700;">Annuler</button></div></div></div>`;
                 window.currentRating = userReview ? userReview.note : null;
 
                 if (c.cast && c.cast.length > 0) {
@@ -1244,22 +1381,22 @@ body {
 
                 html += `<div class="synopsis-section"><strong>Synopsis</strong><p style="margin-top:15px;">${m.overview || "Aucun synopsis disponible."}</p></div>`;
 
-                // Section critique éditorial pour les SÉRIES
-                if (userReview) {
-                    html += `<div class="review-editorial-card"><div class="review-editorial-title">⭐ Notre critique</div><p class="review-editorial-text">"${userReview.text}"</p><div class="review-editorial-footer"><span></span><div style="display:flex; gap:10px;"><div class="review-badge-editorial">${userReview.note}</div><button onclick="editMovieCritique('${m.name}', ${id}, 'tv')" style="background:#f5c518; color:black; border:none; padding:8px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">Modifier</button></div></div></div>`;
-                } else {
-                    html += `<div style="background: white; margin: 25px; border-radius: 12px; padding: 30px; color: black;"><div style="font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-weight: 700;">Écrivez votre critique</div><textarea id="reviewText" placeholder="Partagez votre avis..." style="width:100%; background:#f5f5f5; color:#000; border:1px solid #ddd; border-radius:8px; padding:15px; box-sizing:border-box; min-height:100px; font-size:14px;"></textarea><button onclick="saveMovieCritique('${m.name}', ${id}, 'tv')" style="background:#f5c518; color:black; border:none; padding:12px 24px; border-radius:8px; font-weight:900; cursor:pointer; margin-top:12px; width:100%; text-transform:uppercase;">Publier</button></div>`;
-                }
-
                 if (trailer) {
                     html += `<div class="trailer-section"><strong style="color:white; display:block; margin-bottom:15px;">Bande-annonce</strong><div class="trailer-container" id="trailerContainer"><img src="https://img.youtube.com/vi/${trailer.key}/maxresdefault.jpg" style="width:100%; height:auto; aspect-ratio:16/9; object-fit:cover;"><div class="trailer-play-btn" onclick="playTrailerModal('${trailer.key}', this.parentElement)"><div class="trailer-play-icon"></div></div></div></div>`;
+                }
+
+                // Section critique éditorial pour les SÉRIES en bas de page
+                if (userReview) {
+                    html += `<div class="review-editorial-card" style="margin: 30px 15px; border: 1px solid #f5c518; border-left: 4px solid #f5c518; box-shadow: 0 2px 10px rgba(245,197,24,0.15);"><div class="review-editorial-title">NOTRE CRITIQUE</div><p class="review-editorial-text" style="font-family: Graphik, 'Poppins', sans-serif; font-size: 16px; line-height: 2; margin: 20px 0;">${userReview.text}</p><div class="review-editorial-footer"><div style="display: flex; gap: 10px; width: 100%;"><button onclick="deleteMovieCritique('${m.name}'); closeModal();" style="background:#f44336; color:white; border:none; padding:8px 16px; border-radius:4px; font-weight:700; cursor:pointer; font-size:12px; flex:1;">🗑️ SUPPRIMER</button><button onclick="editMovieCritique('${m.name}', ${id}, 'tv')" style="background:#f5c518; color:black; border:none; padding:8px 16px; border-radius:4px; font-weight:700; cursor:pointer; font-size:12px; flex:1;">✏️ Modifier</button></div></div></div>`;
+                } else {
+                    html += `<div style="background: white; margin: 30px 15px; border-radius: 8px; padding: 30px; color: black; border-left: 4px solid #f5c518; box-shadow: 0 2px 10px rgba(245,197,24,0.15);"><div style="font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-weight: 700;">Écrivez votre critique</div><textarea id="reviewText" placeholder="Partagez votre avis sur la série..." style="width:100%; background:#f9f9f9; color:#000; border:1px solid #ddd; border-radius:6px; padding:15px; box-sizing:border-box; min-height:120px; font-size:14px; font-family: Graphik, 'Poppins', sans-serif; font-weight: 600; line-height: 1.8;"></textarea><button onclick="saveMovieCritique('${m.name}', ${id}, 'tv')" style="background:#f5c518; color:black; border:none; padding:12px 24px; border-radius:6px; font-weight:900; cursor:pointer; margin-top:15px; width:100%; text-transform:uppercase; font-size: 13px;">Publier la critique</button></div>`;
                 }
 
                 html += `</div>`;
                 body.innerHTML = html;
             } catch (e) {
                 console.error('Erreur renderSerieDetails:', e);
-                body.innerHTML = "<p style='text-align:center; color:#f44336;'>Erreur: " + e.message + "</p>";
+                body.innerHTML = "<p style='text-align:center; color:#f44336; padding: 20px;'>Erreur: " + e.message + "<br><br><button onclick='renderActivite(); closeModal();' style='background:#f5c518; color:black; padding:10px 20px; border:none; border-radius:6px; font-weight:700; cursor:pointer;'>Retour à Activité</button></p>";
                 showError('Impossible de charger les détails de la série');
             }
         }
@@ -1330,13 +1467,11 @@ body {
                 const countryCode = birthPlace.match(/^.*[,]\s*([A-Z]{2})$/)?.[1] || 'US';
                 const countryEmoji = getCountryEmoji(countryCode);
                 
-                let html = `<div class="actor-profile-header">`;
+                let html = `<div class="actor-profile-container"><div class="actor-profile-header">`;
                 html += `<img src="${p.profile_path ? IMG_PATH + p.profile_path : 'https://via.placeholder.com/150x150?text=No+Photo'}" class="actor-profile-photo" alt="${p.name || 'Acteur'}">  `;
                 html += `<h2 class="actor-profile-name">${p.name || 'Inconnu'}</h2>`;
                 html += `<div class="actor-profile-info">`;
-                html += `Âge: ${age} ans<br>`;
-                html += `Lieu: ${birthPlace}<br>`;
-                html += `${countryEmoji}${countryCode}`;
+                html += `${age} ans • ${birthPlace.split(', ')[0]}, ${countryCode}`;
                 html += `</div></div>`;
                 
                 html += `<div class="section-title">🎬 Films (${movies.length})</div>`;
@@ -1428,7 +1563,7 @@ body {
                 
                 body.innerHTML = html;
                 
-                // Geste swipe pour fermer
+                // Geste swipe pour fermer depuis le coin gauche de l'écran
                 modal.addEventListener('touchstart', (e) => {
                     touchStartX = e.touches[0].clientX;
                     touchStartY = e.touches[0].clientY;
@@ -1440,6 +1575,7 @@ body {
                     const diffX = touchEndX - touchStartX;
                     const diffY = Math.abs(touchEndY - touchStartY);
                     
+                    // Swipe depuis le coin gauche vers la droite (>100px) avec peu de mouvement vertical (<50px)
                     if (diffX > 100 && diffY < 50 && touchStartX < 50) {
                         closeModal();
                     }
@@ -1455,7 +1591,7 @@ body {
         function renderMesTop() {
             setActive(2);
             document.querySelector('.edit-link').style.display = 'block';
-            document.getElementById('view').innerHTML = `<div class="header-ios"><h1>Mes GOAT</h1></div>${buildTopSection('MON TOP 12 - FILMS', 'movies')}${buildTopSection('MON TOP 12 - SÉRIES', 'series')}${buildTopSection('MON TOP 12 - FOOTBALLEURS', 'actors')}${buildTopSection('MON TOP 12 - ARTISTES', 'artists')}`;
+            document.getElementById('view').innerHTML = `<div class="brand-title">CINÉ SCORE<br><span>Conçu par Walid Berbagui</span></div><div class="header-ios" style="text-align: center;"><h1 style="text-align: center;">Mes GOAT</h1></div>${buildTopSection('MON TOP 12 - FILMS', 'movies')}${buildTopSection('MON TOP 12 - SÉRIES', 'series')}${buildTopSection('MON TOP 12 - FOOTBALLEURS', 'actors')}${buildTopSection('MON TOP 12 - ARTISTES', 'artists')}`;
         }
 
         function buildTopSection(title, type) {
@@ -1582,91 +1718,79 @@ body {
                 const reviews = db.reviews || [];
                 const favorites = db.favorites || [];
                 
-                let feedHTML = '';
+                // Collecter les films et séries notées
+                const ratedMovies = reviews.filter(r => r.type === 'movie');
+                const ratedSeries = reviews.filter(r => r.type === 'tv');
                 
-                if (reviews.length === 0 && favorites.length === 0) {
-                    feedHTML = '<div style="text-align:center; padding:40px; color:var(--imdb-yellow);">Aucune activité</div>';
-                } else {
-                    // Créer toutes les actions
-                    const allActions = [];
-                    
-                    reviews.forEach(r => {
-                        if (r.text && r.text !== 'À noter...') {
-                            allActions.push({
-                                type: 'critique',
-                                item: r,
-                                timestamp: r.timestamp || new Date(0).toISOString()
-                            });
-                        }
-                        allActions.push({
-                            type: 'note',
-                            item: r,
-                            timestamp: r.timestamp || new Date(0).toISOString()
-                        });
+                // Créer la section grid Netflix style pour les films notés
+                let moviesGridHTML = '';
+                if (ratedMovies.length > 0) {
+                    moviesGridHTML = `<div class="section-title" style="margin-top: 20px;">🎬 Films Notés</div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px;">`;
+                    ratedMovies.forEach(r => {
+                        const noteColor = r.note >= 7 ? '#4caf50' : r.note >= 6 ? '#fdd835' : r.note >= 5 ? '#ff9800' : '#f44336';
+                        const noteLabel = r.note >= 7 ? 'actif' : r.note >= 6 ? 'light-yellow' : r.note >= 5 ? 'orange' : 'red';
+                        moviesGridHTML += `
+                        <div style="cursor:pointer; border-radius: 8px; overflow: hidden; background: #0a0a0a; position: relative; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'; this.style.zIndex='10';" onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1';" onclick="renderMovieDetails(${r.id})">
+                            <div style="aspect-ratio: 2/3; background: #0a0a0a; position: relative; overflow: hidden;">
+                                ${r.img ? `<img src="${r.img}" style="width: 100%; height: 100%; object-fit: cover;">` : `<div style="width:100%;height:100%;background:var(--imdb-yellow);display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;text-align:center;font-size:10px;padding:5px;word-break:break-word;">${r.name}</div>`}
+                                <div style="position: absolute; top: 8px; right: 8px; background: ${noteColor}; color: ${r.note >= 6 ? '#000' : 'white'}; padding: 4px 8px; border-radius: 4px; font-weight: 900; font-size: 13px; font-family: Orbitron; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">${r.note}</div>
+                            </div>
+                            <div style="padding: 8px; font-size: 10px; font-weight: 600; color: #aaa; text-align: center; min-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${r.name}</div>
+                        </div>`;
                     });
-                    
+                    moviesGridHTML += `</div>`;
+                }
+                
+                // Créer la section grid Netflix style pour les séries notées
+                let seriesGridHTML = '';
+                if (ratedSeries.length > 0) {
+                    seriesGridHTML = `<div class="section-title" style="margin-top: 20px;">📺 Séries Notées</div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px;">`;
+                    ratedSeries.forEach(r => {
+                        const noteColor = r.note >= 7 ? '#4caf50' : r.note >= 6 ? '#fdd835' : r.note >= 5 ? '#ff9800' : '#f44336';
+                        seriesGridHTML += `
+                        <div style="cursor:pointer; border-radius: 8px; overflow: hidden; background: #0a0a0a; position: relative; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'; this.style.zIndex='10';" onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1';" onclick="renderSerieDetails(${r.id})">
+                            <div style="aspect-ratio: 2/3; background: #0a0a0a; position: relative; overflow: hidden;">
+                                ${r.img ? `<img src="${r.img}" style="width: 100%; height: 100%; object-fit: cover;">` : `<div style="width:100%;height:100%;background:var(--imdb-yellow);display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;text-align:center;font-size:10px;padding:5px;word-break:break-word;">${r.name}</div>`}
+                                <div style="position: absolute; top: 8px; right: 8px; background: ${noteColor}; color: ${r.note >= 6 ? '#000' : 'white'}; padding: 4px 8px; border-radius: 4px; font-weight: 900; font-size: 13px; font-family: Orbitron; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">${r.note}</div>
+                            </div>
+                            <div style="padding: 8px; font-size: 10px; font-weight: 600; color: #aaa; text-align: center; min-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${r.name}</div>
+                        </div>`;
+                    });
+                    seriesGridHTML += `</div>`;
+                }
+                
+                // Créer la section "À VOIR"
+                let favoritesGridHTML = '';
+                if (favorites.length > 0) {
+                    favoritesGridHTML = `<div class="section-title" style="margin-top: 20px;">🌟 À Voir</div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px;">`;
                     favorites.forEach(f => {
-                        allActions.push({
-                            type: 'favori',
-                            item: f,
-                            timestamp: f.timestamp || new Date(0).toISOString()
-                        });
+                        favoritesGridHTML += `
+                        <div style="cursor:pointer; border-radius: 8px; overflow: hidden; background: #0a0a0a; position: relative; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'; this.style.zIndex='10';" onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1';" onclick="render${f.type === 'tv' ? 'Serie' : 'Movie'}Details(${f.id})">
+                            <div style="aspect-ratio: 2/3; background: #0a0a0a; position: relative;">
+                                ${f.img ? `<img src="${f.img}" style="width: 100%; height: 100%; object-fit: cover;">` : `<div style="width:100%;height:100%;background:var(--imdb-yellow);display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;text-align:center;font-size:10px;padding:5px;word-break:break-word;">${f.name}</div>`}
+                            </div>
+                            <div style="padding: 8px; font-size: 10px; font-weight: 600; color: #aaa; text-align: center; min-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${f.name}</div>
+                        </div>`;
                     });
-                    
-                    allActions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                    
-                    feedHTML = allActions.map(action => {
-                        const date = new Date(action.timestamp).toLocaleDateString('fr-FR');
-                        const user = db.user || {};
-                        
-                        if (action.type === 'critique') {
-                            return `<div style="padding: 20px 15px; border-bottom: 1px solid #222; background: #0a0a0a;">
-                                <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
-                                    <img src="${user.avatar || 'https://via.placeholder.com/32x32?text=U'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: 700; color: white; font-size: 13px;">${user.displayName || 'Utilisateur'} <span style="font-weight: 400; color: #aaa;">a écrit une nouvelle critique</span></div>
-                                        <div style="font-size: 10px; color: #666; margin-top: 4px;">${date}</div>
-                                    </div>
-                                </div>
-                                <div style="background: white; color: black; padding: 12px; border-radius: 6px; margin: 8px 0; font-size: 13px; line-height: 1.5;">"${action.item.text}"</div>
-                            </div>`;
-                        } else if (action.type === 'note') {
-                            const color = action.item.note >= 7 ? '#4caf50' : action.item.note >= 6 ? '#2196F3' : action.item.note >= 5 ? '#ff9800' : '#f44336';
-                            return `<div style="padding: 15px; border-bottom: 1px solid #222;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <img src="${user.avatar || 'https://via.placeholder.com/32x32?text=U'}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-                                    <div style="flex: 1; font-size: 12px;">
-                                        <div style="font-weight: 700; color: white;">${user.displayName || 'Utilisateur'}</div>
-                                        <div style="color: #aaa;">a attribué <span style="color: ${color}; font-weight: 700;">${action.item.note}/10</span> au ${action.item.type === 'movie' ? 'film' : 'série'}</div>
-                                    </div>
-                                    <div style="font-size: 10px; color: #666; text-align: right;">${date}</div>
-                                </div>
-                            </div>`;
-                        } else {
-                            return `<div style="padding: 15px; border-bottom: 1px solid #222;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <img src="${user.avatar || 'https://via.placeholder.com/32x32?text=U'}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-                                    <div style="flex: 1; font-size: 12px;">
-                                        <div style="font-weight: 700; color: white;">${user.displayName || 'Utilisateur'}</div>
-                                        <div style="color: #aaa;">a envie de voir le ${action.item.type === 'movie' ? 'film' : 'série'} <span style="color: var(--imdb-yellow); font-weight: 600;">${action.item.name}</span></div>
-                                    </div>
-                                    <div style="font-size: 10px; color: #666; text-align: right;">${date}</div>
-                                </div>
-                            </div>`;
-                        }
-                    }).join('');
+                    favoritesGridHTML += `</div>`;
                 }
                 
                 document.getElementById('view').innerHTML = `
-                    <div class="brand-title">CINÉ SCORE<br><span>by @wb10officiel</span></div>
+                    <div class="brand-title">CINÉ SCORE<br><span>Conçu par Walid Berbagui</span></div>
                     <div class="header-ios"><h1>Activité</h1></div>
                     <div style="padding-bottom: 20px;">
                         <div class="stats-ribbon">
-                            <div class="stat-box"><span class="stat-val">${reviews.filter(r=>r.type==='movie').length}</span><span class="stat-lbl">Films</span></div>
-                            <div class="stat-box"><span class="stat-val">${reviews.filter(r=>r.type==='tv').length}</span><span class="stat-lbl">Séries</span></div>
+                            <div class="stat-box"><span class="stat-val">${ratedMovies.length}</span><span class="stat-lbl">Films</span></div>
+                            <div class="stat-box"><span class="stat-val">${ratedSeries.length}</span><span class="stat-lbl">Séries</span></div>
                             <div class="stat-box"><span class="stat-val">${favorites.length}</span><span class="stat-lbl">À Voir</span></div>
                         </div>
-                        ${feedHTML}
+                        ${favoritesGridHTML}
+                        ${moviesGridHTML}
+                        ${seriesGridHTML}
+                        ${ratedMovies.length === 0 && ratedSeries.length === 0 && favorites.length === 0 ? '<div style="text-align:center; padding:40px; color:var(--imdb-yellow);">Aucune activité</div>' : ''}
                     </div>
                 `;
             } catch (e) {
@@ -1817,7 +1941,7 @@ body {
         }
 
         function renderProfil() {
-            setActive(4);
+            setActive(0);
             try {
                 const reviews = db.reviews || [];
                 const favorites = db.favorites || [];
@@ -1826,7 +1950,7 @@ body {
                 const avgRating = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.note, 0) / reviews.length).toFixed(1) : 0;
 
                 document.getElementById('view').innerHTML = `
-                    <div class="brand-title">CINÉ SCORE<br><span>by @wb10officiel</span></div>
+                    <div class="brand-title">CINÉ SCORE<br><span>Conçu par Walid Berbagui</span></div>
                     <div class="header-ios" style="display: flex; justify-content: space-between; align-items: center;">
                         <h1 style="margin: 0;">Profil</h1>
                         <div style="text-align: center;">
@@ -1890,7 +2014,13 @@ body {
             reader.readAsDataURL(file);
         }
 
-        loadData().then(() => renderSorties());
+        // Charger les données et vérifier l'authentification
+        loadData().then(() => {
+            checkAuthentication();
+            if (db.user.email || db.user.displayName) {
+                renderActivite();
+            }
+        });
         
         function toggleEdit() {
             const btns = document.querySelectorAll('.remove-btn');
@@ -2021,7 +2151,7 @@ body {
             syncFirebase().then(() => {
                 showSuccess('Paramètres sauvegardés avec succès!');
                 closeModal();
-                renderProfil();
+                renderSorties();
             }).catch(e => {
                 console.error('Erreur lors de la sauvegarde:', e);
                 showError('Erreur lors de la sauvegarde des paramètres');
@@ -2040,6 +2170,55 @@ body {
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
+
+        // Google Sign-In
+        function handleCredentialResponse(response) {
+            // Décoder le JWT
+            const decoded = JSON.parse(atob(response.credential.split('.')[1]));
+            
+            db.user.displayName = decoded.name || decoded.email.split('@')[0];
+            db.user.username = '@' + (decoded.name?.replace(/\s+/g, '_').toLowerCase() || decoded.email.split('@')[0]);
+            db.user.avatar = decoded.picture || null;
+            db.user.email = decoded.email;
+            
+            syncFirebase().then(() => {
+                hideLoginPage();
+                renderSorties();
+                showSuccess('Connexion réussie! Bienvenue ' + db.user.displayName);
+            });
+        }
+
+        function hideLoginPage() {
+            const loginPage = document.getElementById('login-page');
+            if (loginPage) {
+                loginPage.style.display = 'none';
+            }
+        }
+
+        function showLoginPage() {
+            const loginPage = document.getElementById('login-page');
+            if (loginPage) {
+                loginPage.style.display = 'flex';
+            }
+        }
+
+        // Vérifier si l'utilisateur est authentifié au chargement
+        function checkAuthentication() {
+            if (!db || !db.user || (!db.user.email && !db.user.displayName)) {
+                showLoginPage();
+            } else {
+                hideLoginPage();
+            }
+        }
+
+        // Charger les données et vérifier l'authentification
+        loadData().then(() => {
+            checkAuthentication();
+            if (db.user.email || db.user.displayName) {
+                renderSorties();
+            }
+        });
     </script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </body>
 </html>
